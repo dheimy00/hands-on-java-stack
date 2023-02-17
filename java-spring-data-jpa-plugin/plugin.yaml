@@ -1,0 +1,90 @@
+name: java-spring-data-jpa-plugin
+description: Adicionar JPA + Configuração de banco de dados (H2, Mysql, Postgresql)
+display-name: java-spring-data-jpa-plugin
+picture: plugin.png
+category: backend # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/plugin/#category
+compatibility:
+  - java
+  - spring
+  - jpa
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies: # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/yaml/#technologies
+  - "Api"
+types:
+  - app
+inputs:
+  - label: Choose one database (RDMS)
+    type: text
+    name: database_name
+    items:
+      - H2
+      - MySQL
+      - Postgresql
+  - label: Add a sample code ( Produto API)
+    name: use_samples
+    type: bool
+    default: true
+
+computed-inputs:
+  database_name_formatted: "{{database_name|lower}}"
+
+hooks:
+  - type: edit
+    path: pom.xml
+    trigger: after-render
+    changes:
+      - search:
+          string: "</dependencies>"
+          insert-before:
+            snippet: snippets/snippet-pom.xml
+            when:
+              not-exists-snippet: snippets/snippet-pom.xml
+
+  - type: edit
+    path: src/main/resources/application.yml
+    trigger: after-render
+    changes:
+      - search:
+          string: "spring:"
+          insert-before:
+            snippet: snippets/snippet-application.yml
+            when:
+              not-exists-snippet: "datasources:"
+
+  - type: edit
+    path: src/main/resources/application-test.yml
+    trigger: after-render
+    changes:
+      - search:
+          string: "spring:"
+          insert-before:
+            snippet: snippets/snippet-application-test.yml
+            when:
+              not-exists-snippet: "datasources:"
+
+  - type: render-templates
+    trigger: after-render
+    path: snippets/samples
+    condition:
+      variable: use_samples
+      operator: ==
+      value: true
+
+  - type: render-templates
+    trigger: after-render
+    path: snippets/docker-mysql
+    condition:
+      variable: use_samples
+      operator: ==
+      value: mysql
+
+  - type: render-templates
+    trigger: after-render
+    path: snippets/docker-postgresql
+    condition:
+      variable: use_samples
+      operator: ==
+      value: postgresql

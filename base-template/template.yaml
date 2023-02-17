@@ -1,0 +1,37 @@
+name: base-template
+description: Template base para projeto JAVA + MAVEN + SPRING BOOT
+types:
+  - app-template
+inputs:
+  - label: Project name
+    type: text
+    name: project_name
+    default: project-name
+    global: true
+  - label: Enter a Group ID for the project
+    type: text
+    name: project_group_id
+    pattern: '(^[a-zA-Z_\d.]*[a-zA-Z_\d.]$)'
+    default: br.com
+    global: true
+  - label: Inform the project artifact ID
+    type: text
+    name: project_artifact_id
+    pattern: '(^[a-zA-Z-_\d]*$)'
+    global: true
+  - label: Enter a version for the project
+    type: text
+    name: project_version
+    default: '0.0.0.1-SNAPSHOT'
+    pattern: '(^[a-zA-Z-._\d]*[a-zA-Z\d]$)'
+    global: true
+  - label: Enter a description for the project
+    type: text
+    name: project_description
+    required: false
+    global: true
+
+global-computed-inputs:
+  "application_name": "{{ project_name | replace('-',' ') | replace('.',' ') | replace('/',' ') | title | replace(' ','') }}"
+  "base_package": "{{ project_group_id }}.{{ project_name | replace('-',' ') | replace('.',' ') }}"
+  "package_dir": "{{ global_computed_inputs.base_package | replace('.','/')  }}"

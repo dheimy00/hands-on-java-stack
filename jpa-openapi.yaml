@@ -1,0 +1,9 @@
+type: app
+description: Java API + OpenAPI + Swagger UI
+template: hands-on-java-stack/base-template
+inputs:
+  some_input: value
+plugins:
+  - plugin: hands-on-java-stack/java-spring-data-jpa-plugin
+  - plugin: hands-on-java-stack/java-spring-openapi-plugin
+

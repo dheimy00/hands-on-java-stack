@@ -1,0 +1,61 @@
+spring:
+  {% if database_name_formatted == 'h2' %}
+  datasources:
+    url: jdbc:h2:mem:test_db
+    username: sa
+  h2:
+    console:
+      enabled: false
+  {% endif %}
+  {% if database_name_formatted == 'mysql' %}
+  datasources:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: root
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 20
+      connection-timeout: 1000 #10s
+      validation-timeout: 5000 #10s
+      max-lifetime: 1800000 #30 mim
+      leak-detection-threshold: 60000 #1min
+      data-source-properties:
+        useServerPrepStmts: false
+        cachePrepStmts: true
+        prepStmtCacheSize: 50
+        prepStmtCacheSqlLimit: 1024
+  {% endif %}
+  {% if database_name_formatted == 'postgresql' %}
+  datasources:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:3306/test_db
+    username: postgres
+    password: postgres
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 20
+      connection-timeout: 1000 #10s
+      validation-timeout: 5000 #10s
+      max-lifetime: 1800000 #30 mim
+      leak-detection-threshold: 60000 #1min
+  {% endif %}
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+          batch_size: 15
+          order_inserts: true
+        connection:
+          provider_disables_autocommit: true
+        query:
+          in_clause_parameter_padding: true
+          fail_on_pagination_over_collection_fetch: true
+          plan_cache_max_size: 4096

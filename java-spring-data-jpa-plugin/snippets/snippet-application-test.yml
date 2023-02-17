@@ -1,0 +1,19 @@
+spring:
+  {% if database_name_formatted == 'h2' %}
+  datasources:
+    url: jdbc:h2:mem:test_db
+    username: sa
+  h2:
+    console:
+      enabled: false
+  {% endif %}
+  {% if database_name_formatted == 'mysql' %}
+  datasources:
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8.0.30:////test_db
+  {% endif %}
+  {% if database_name_formatted == 'postgresql' %}
+  datasources:
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:8.0.30:////test_db
+  {% endif %}
